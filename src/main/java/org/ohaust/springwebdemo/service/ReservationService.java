@@ -6,7 +6,6 @@ import org.ohaust.springwebdemo.model.ReservableHour;
 import org.ohaust.springwebdemo.model.request.ReservationRequest;
 import org.ohaust.springwebdemo.model.result.ReservationResult;
 import org.ohaust.springwebdemo.repository.ReservationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
