@@ -1,21 +1,19 @@
 package org.ohaust.springwebdemo.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Id;
 
 import java.util.List;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ReservableDate {
 
     @Id
     String id;
 
-    Date date;
-    List<ReservableHour> reservableHourList;
+    private final Date date;
+    private final List<ReservableQuarterHour> reservableQuarterHourList;
 
 }

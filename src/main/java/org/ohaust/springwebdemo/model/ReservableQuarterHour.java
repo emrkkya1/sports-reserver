@@ -5,9 +5,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ReservableHour {
+public class ReservableQuarterHour {
 
-    private int hour;
+    private TimePoint startTime;
     private boolean isReserved = false;
 
 }

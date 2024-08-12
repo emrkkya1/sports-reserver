@@ -7,10 +7,10 @@ import org.ohaust.springwebdemo.model.TimePoint;
 
 @Data
 @NoArgsConstructor
-public class ReservationRequest {
+public class AvailabilityRequest {
 
-    private Date date;
-    private TimePoint timeFrom;
-    private TimePoint timeTo;
+    Date date;
+    TimePoint timeFrom;
+    TimePoint timeTo;
 
 }
