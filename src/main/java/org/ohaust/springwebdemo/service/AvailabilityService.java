@@ -1,12 +1,9 @@
 package org.ohaust.springwebdemo.service;
 
-import org.apache.coyote.Response;
-import org.ohaust.springwebdemo.model.Date;
+
 import org.ohaust.springwebdemo.model.ReservableDate;
 import org.ohaust.springwebdemo.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
