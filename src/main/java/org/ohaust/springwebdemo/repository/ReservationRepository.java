@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReservationRepository extends MongoRepository<ReservableDateModel, String> {
-    ReservableDateModel findByDate(DateModel dateModel);
+    ReservableDateModel findByDateModel(DateModel dateModel);
 }
