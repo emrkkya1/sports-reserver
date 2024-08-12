@@ -5,7 +5,10 @@ import org.ohaust.springwebdemo.model.request.ReservationRequest;
 import org.ohaust.springwebdemo.model.result.ReservationResult;
 import org.ohaust.springwebdemo.service.ReservationService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
 @RequiredArgsConstructor
