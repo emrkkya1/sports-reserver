@@ -24,7 +24,7 @@ public class ReservationService {
     public ReservationResult reserveIfAvailable(ReservationRequest reservationRequest) {
         DateModel dateModel = reservationRequest.getDateModel();
 
-        ReservableDateModel dateToReserve = repository.findByDate(dateModel);
+        ReservableDateModel dateToReserve = repository.findByDateModel(dateModel);
         if (dateToReserve == null) {
             return new ReservationResult(false, "Date does not exists or not available.");
         }

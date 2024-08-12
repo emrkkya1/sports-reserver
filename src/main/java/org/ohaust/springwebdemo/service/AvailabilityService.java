@@ -20,7 +20,7 @@ public class AvailabilityService {
 
     public DayCreationResult createAnAvailableDay(AvailabilityRequest availabilityRequest) {
         ReservableDateModel dateFromRequest = transformAvailabilityRequestToReservableDate(availabilityRequest);
-        ReservableDateModel dateInDatabase = reservationRepository.findByDate(availabilityRequest.getDateModel());
+        ReservableDateModel dateInDatabase = reservationRepository.findByDateModel(availabilityRequest.getDateModel());
         if (dateInDatabase == null && dateFromRequest != null) {
             reservationRepository.save(dateFromRequest);
             return new DayCreationResult(true,"Available day was created and saved to the database successfully.");
