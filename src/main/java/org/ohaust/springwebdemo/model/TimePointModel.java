@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TimePoint {
+public class TimePointModel {
 
     private int hour;
     private int minute;

@@ -2,15 +2,15 @@ package org.ohaust.springwebdemo.model.request;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.ohaust.springwebdemo.model.Date;
-import org.ohaust.springwebdemo.model.TimePoint;
+import org.ohaust.springwebdemo.model.DateModel;
+import org.ohaust.springwebdemo.model.TimePointModel;
 
 @Data
 @NoArgsConstructor
 public class AvailabilityRequest {
 
-    Date date;
-    TimePoint timeFrom;
-    TimePoint timeTo;
+    DateModel dateModel;
+    TimePointModel timeFrom;
+    TimePointModel timeTo;
 
 }

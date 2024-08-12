@@ -8,12 +8,12 @@ import java.util.List;
 
 @Data
 @RequiredArgsConstructor
-public class ReservableDate {
+public class ReservableDateModel {
 
     @Id
     String id;
 
-    private final Date date;
-    private final List<ReservableQuarterHour> reservableQuarterHourList;
+    private final DateModel dateModel;
+    private final List<ReservableQuarterHourModel> reservableQuarterHourList;
 
 }

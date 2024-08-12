@@ -1,10 +1,11 @@
 package org.ohaust.springwebdemo.service;
 
 
-import org.ohaust.springwebdemo.model.ReservableDate;
-import org.ohaust.springwebdemo.model.ReservableQuarterHour;
-import org.ohaust.springwebdemo.model.TimePoint;
+import org.ohaust.springwebdemo.model.ReservableDateModel;
+import org.ohaust.springwebdemo.model.ReservableQuarterHourModel;
+import org.ohaust.springwebdemo.model.TimePointModel;
 import org.ohaust.springwebdemo.model.request.AvailabilityRequest;
+import org.ohaust.springwebdemo.model.result.DayCreationResult;
 import org.ohaust.springwebdemo.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,23 +18,23 @@ public class AvailabilityService {
     @Autowired
     ReservationRepository reservationRepository;
 
-    public boolean createAnAvailableDay(AvailabilityRequest availabilityRequest) {
-        ReservableDate dateFromRequest = transformAvailabilityRequestToReservableDate(availabilityRequest);
-        ReservableDate dateInDatabase = reservationRepository.findByDate(availabilityRequest.getDate());
+    public DayCreationResult createAnAvailableDay(AvailabilityRequest availabilityRequest) {
+        ReservableDateModel dateFromRequest = transformAvailabilityRequestToReservableDate(availabilityRequest);
+        ReservableDateModel dateInDatabase = reservationRepository.findByDate(availabilityRequest.getDateModel());
         if (dateInDatabase == null && dateFromRequest != null) {
             reservationRepository.save(dateFromRequest);
-            return true;
+            return new DayCreationResult(true,"Available day was created and saved to the database successfully.");
         } else {
-            return false;
+            return new DayCreationResult(false,"Date already exists or day-hour values wasn't accepted.");
         }
 
 
     }
 
-    private ReservableDate transformAvailabilityRequestToReservableDate(AvailabilityRequest availabilityRequest) {
-        TimePoint timeFrom = availabilityRequest.getTimeFrom();
-        TimePoint timeTo = availabilityRequest.getTimeTo();
-        List<ReservableQuarterHour> reservableQuarterHourList = new ArrayList<>();
+    private ReservableDateModel transformAvailabilityRequestToReservableDate(AvailabilityRequest availabilityRequest) {
+        TimePointModel timeFrom = availabilityRequest.getTimeFrom();
+        TimePointModel timeTo = availabilityRequest.getTimeTo();
+        List<ReservableQuarterHourModel> reservableQuarterHourList = new ArrayList<>();
         int amountOfTime = (timeTo.getHour() - timeFrom.getHour()) * 4 + (timeTo.getMinute() - timeFrom.getMinute()) / 15;
         if (amountOfTime < 0) {
             return null;
@@ -41,11 +42,11 @@ public class AvailabilityService {
         for (int i = 0; i < amountOfTime; i++) {
             int hour = timeFrom.getHour() + i / 4;
             int minute = (timeFrom.getMinute() + i * 15) % 60;
-            TimePoint timePoint = new TimePoint(hour, minute);
-            ReservableQuarterHour quarterHour = new ReservableQuarterHour();
-            quarterHour.setStartTime(timePoint);
+            TimePointModel timePointModel = new TimePointModel(hour, minute);
+            ReservableQuarterHourModel quarterHour = new ReservableQuarterHourModel();
+            quarterHour.setStartTime(timePointModel);
             reservableQuarterHourList.add(quarterHour);
         }
-        return new ReservableDate(availabilityRequest.getDate(), reservableQuarterHourList);
+        return new ReservableDateModel(availabilityRequest.getDateModel(), reservableQuarterHourList);
     }
 }

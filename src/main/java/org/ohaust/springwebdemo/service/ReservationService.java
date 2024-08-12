@@ -1,9 +1,9 @@
 package org.ohaust.springwebdemo.service;
 
-import org.ohaust.springwebdemo.model.Date;
-import org.ohaust.springwebdemo.model.ReservableDate;
-import org.ohaust.springwebdemo.model.ReservableQuarterHour;
-import org.ohaust.springwebdemo.model.TimePoint;
+import org.ohaust.springwebdemo.model.DateModel;
+import org.ohaust.springwebdemo.model.ReservableDateModel;
+import org.ohaust.springwebdemo.model.ReservableQuarterHourModel;
+import org.ohaust.springwebdemo.model.TimePointModel;
 import org.ohaust.springwebdemo.model.request.ReservationRequest;
 import org.ohaust.springwebdemo.model.result.ReservationResult;
 import org.ohaust.springwebdemo.repository.ReservationRepository;
@@ -22,16 +22,16 @@ public class ReservationService {
     }
 
     public ReservationResult reserveIfAvailable(ReservationRequest reservationRequest) {
-        Date date = reservationRequest.getDate();
+        DateModel dateModel = reservationRequest.getDateModel();
 
-        ReservableDate dateToReserve = repository.findByDate(date);
+        ReservableDateModel dateToReserve = repository.findByDate(dateModel);
         if (dateToReserve == null) {
             return new ReservationResult(false, "Date does not exists or not available.");
         }
-        TimePoint timeFrom = reservationRequest.getTimeFrom();
-        TimePoint timeTo = reservationRequest.getTimeTo();
+        TimePointModel timeFrom = reservationRequest.getTimeFrom();
+        TimePointModel timeTo = reservationRequest.getTimeTo();
         int amountOfTime = calculateAmountOfTime(timeFrom, timeTo);
-        List<ReservableQuarterHour> reservableQuarterHourList = dateToReserve.getReservableQuarterHourList();
+        List<ReservableQuarterHourModel> reservableQuarterHourList = dateToReserve.getReservableQuarterHourList();
         int index = findQuarterHourIndex(reservableQuarterHourList, timeFrom, amountOfTime);
         if (index == -1) {
             return new ReservationResult(false, "Time interval is not available for reservation.");
@@ -45,10 +45,10 @@ public class ReservationService {
         return new ReservationResult(false, "Time interval or part of time interval already reserved!");
     }
 
-    private boolean reserve(List<ReservableQuarterHour> reservableQuarterHourList, int index, int amountOfTime) {
+    private boolean reserve(List<ReservableQuarterHourModel> reservableQuarterHourList, int index, int amountOfTime) {
 
-        ReservableQuarterHour firstQuarterHour = reservableQuarterHourList.get(index);
-        ReservableQuarterHour lastQuarterHour = reservableQuarterHourList.get(index + amountOfTime - 1);
+        ReservableQuarterHourModel firstQuarterHour = reservableQuarterHourList.get(index);
+        ReservableQuarterHourModel lastQuarterHour = reservableQuarterHourList.get(index + amountOfTime - 1);
 
         //may be subject to change, there may be edge cases where a quarter hour within range is reserved
         // but not first or last.
@@ -57,13 +57,13 @@ public class ReservationService {
         }
 
         for (int i = index; i < index + amountOfTime; i++) {
-            ReservableQuarterHour reservableQuarterHour = reservableQuarterHourList.get(i);
+            ReservableQuarterHourModel reservableQuarterHour = reservableQuarterHourList.get(i);
             reservableQuarterHour.setReserved(true);
         }
         return true;
     }
 
-    private int calculateAmountOfTime(TimePoint timeFrom, TimePoint timeTo) {
+    private int calculateAmountOfTime(TimePointModel timeFrom, TimePointModel timeTo) {
         int hourFrom = timeFrom.getHour();
         int minuteFrom = timeFrom.getMinute();
         int hourTo = timeTo.getHour();
@@ -72,7 +72,7 @@ public class ReservationService {
     }
 
 
-    private int findQuarterHourIndex(List<ReservableQuarterHour> reservableQuarterHourList, TimePoint timeFrom, int amountOfTime) {
+    private int findQuarterHourIndex(List<ReservableQuarterHourModel> reservableQuarterHourList, TimePointModel timeFrom, int amountOfTime) {
         int index = -1;
         for (int i = 0; i < reservableQuarterHourList.size(); i++) {
             int hourFrom = reservableQuarterHourList.get(i).getStartTime().getHour();

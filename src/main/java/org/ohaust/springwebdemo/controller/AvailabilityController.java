@@ -1,6 +1,7 @@
 package org.ohaust.springwebdemo.controller;
 
 import org.ohaust.springwebdemo.model.request.AvailabilityRequest;
+import org.ohaust.springwebdemo.model.result.DayCreationResult;
 import org.ohaust.springwebdemo.service.AvailabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,12 +18,12 @@ public class AvailabilityController {
 
     @PostMapping("/create")
     public ResponseEntity<String> createAvailableDay(@RequestBody AvailabilityRequest availabilityRequest) {
-        boolean isDayCreated = availabilityService.createAnAvailableDay(availabilityRequest);
+        DayCreationResult dayCreationResult = availabilityService.createAnAvailableDay(availabilityRequest);
 
-        if (isDayCreated) {
-            return ResponseEntity.ok("Success");
+        if (dayCreationResult.isSuccess()) {
+            return ResponseEntity.ok(dayCreationResult.getMessage());
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Day already exists..");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dayCreationResult.getMessage());
         }
     }
 }
