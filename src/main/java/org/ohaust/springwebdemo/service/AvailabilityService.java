@@ -2,7 +2,7 @@ package org.ohaust.springwebdemo.service;
 
 
 import org.ohaust.springwebdemo.model.ReservableDateModel;
-import org.ohaust.springwebdemo.model.ReservableQuarterHourModel;
+import org.ohaust.springwebdemo.model.ReservableTimeIntervalModel;
 import org.ohaust.springwebdemo.model.TimePointModel;
 import org.ohaust.springwebdemo.model.request.AvailabilityRequest;
 import org.ohaust.springwebdemo.model.result.DayCreationResult;
@@ -15,8 +15,12 @@ import java.util.ArrayList;
 
 @Service
 public class AvailabilityService {
+
     @Autowired
     ReservationRepository reservationRepository;
+
+    private static final int intervalLength = 15;
+    private final int intervalsPerHour = 60 / intervalLength;
 
     public DayCreationResult createAnAvailableDay(AvailabilityRequest availabilityRequest) {
         ReservableDateModel dateFromRequest = transformAvailabilityRequestToReservableDate(availabilityRequest);
@@ -34,19 +38,29 @@ public class AvailabilityService {
     private ReservableDateModel transformAvailabilityRequestToReservableDate(AvailabilityRequest availabilityRequest) {
         TimePointModel timeFrom = availabilityRequest.getTimeFrom();
         TimePointModel timeTo = availabilityRequest.getTimeTo();
-        List<ReservableQuarterHourModel> reservableQuarterHourList = new ArrayList<>();
-        int amountOfTime = (timeTo.getHour() - timeFrom.getHour()) * 4 + (timeTo.getMinute() - timeFrom.getMinute()) / 15;
-        if (amountOfTime < 0) {
+        List<ReservableTimeIntervalModel> reservableTimeIntervalModelList = new ArrayList<>();
+        int numberOfTimeIntervals = numberOfTimeIntervals(timeFrom, timeTo);
+        if (numberOfTimeIntervals < 0) {
             return null;
         }
-        for (int i = 0; i < amountOfTime; i++) {
-            int hour = timeFrom.getHour() + i / 4;
-            int minute = (timeFrom.getMinute() + i * 15) % 60;
+        populateReservableTimeIntervalList(timeFrom,numberOfTimeIntervals,reservableTimeIntervalModelList);
+        return new ReservableDateModel(availabilityRequest.getDateModel(), reservableTimeIntervalModelList);
+    }
+
+    private int numberOfTimeIntervals(TimePointModel timeFrom, TimePointModel timeTo) {
+        return (timeTo.getHour() - timeFrom.getHour()) * intervalsPerHour + (timeTo.getMinute() - timeFrom.getMinute()) / intervalLength;
+    }
+
+    private void populateReservableTimeIntervalList(TimePointModel timeFrom, int numberOfTimeIntervals,List<ReservableTimeIntervalModel> reservableTimeIntervalModelList) {
+        for (int i = 0; i < numberOfTimeIntervals; i++) {
+            int hour = timeFrom.getHour() + i / intervalsPerHour;
+            int minute = (timeFrom.getMinute() + i * intervalLength) % 60;
             TimePointModel timePointModel = new TimePointModel(hour, minute);
-            ReservableQuarterHourModel quarterHour = new ReservableQuarterHourModel();
-            quarterHour.setStartTime(timePointModel);
-            reservableQuarterHourList.add(quarterHour);
+            ReservableTimeIntervalModel timeIntervalModel = new ReservableTimeIntervalModel();
+            timeIntervalModel.setStartTime(timePointModel);
+            reservableTimeIntervalModelList.add(timeIntervalModel);
         }
-        return new ReservableDateModel(availabilityRequest.getDateModel(), reservableQuarterHourList);
     }
 }
+
+

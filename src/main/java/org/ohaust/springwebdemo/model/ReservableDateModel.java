@@ -14,6 +14,6 @@ public class ReservableDateModel {
     String id;
 
     private final DateModel dateModel;
-    private final List<ReservableQuarterHourModel> reservableQuarterHourList;
+    private final List<ReservableTimeIntervalModel> reservableQuarterHourList;
 
 }

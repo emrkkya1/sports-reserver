@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ReservableQuarterHourModel {
+public class ReservableTimeIntervalModel {
 
     private TimePointModel startTime;
     private boolean isReserved = false;
