@@ -19,8 +19,8 @@ public class AvailabilityService {
     @Autowired
     ReservationRepository reservationRepository;
 
-    private static final int intervalLength = 15;
-    private final int intervalsPerHour = 60 / intervalLength;
+    private static final int INTERVAL_LENGTH = 15;
+    private static final int INTERVALS_PER_HOUR = 60 / INTERVAL_LENGTH;
 
     public DayCreationResult createAnAvailableDay(AvailabilityRequest availabilityRequest) {
         ReservableDateModel dateFromRequest = transformAvailabilityRequestToReservableDate(availabilityRequest);
@@ -48,13 +48,13 @@ public class AvailabilityService {
     }
 
     private int numberOfTimeIntervals(TimePointModel timeFrom, TimePointModel timeTo) {
-        return (timeTo.getHour() - timeFrom.getHour()) * intervalsPerHour + (timeTo.getMinute() - timeFrom.getMinute()) / intervalLength;
+        return (timeTo.getHour() - timeFrom.getHour()) * INTERVALS_PER_HOUR + (timeTo.getMinute() - timeFrom.getMinute()) / INTERVAL_LENGTH;
     }
 
     private void populateReservableTimeIntervalList(TimePointModel timeFrom, int numberOfTimeIntervals,List<ReservableTimeIntervalModel> reservableTimeIntervalModelList) {
         for (int i = 0; i < numberOfTimeIntervals; i++) {
-            int hour = timeFrom.getHour() + i / intervalsPerHour;
-            int minute = (timeFrom.getMinute() + i * intervalLength) % 60;
+            int hour = timeFrom.getHour() + i / INTERVALS_PER_HOUR;
+            int minute = (timeFrom.getMinute() + i * INTERVAL_LENGTH) % 60;
             TimePointModel timePointModel = new TimePointModel(hour, minute);
             ReservableTimeIntervalModel timeIntervalModel = new ReservableTimeIntervalModel();
             timeIntervalModel.setStartTime(timePointModel);

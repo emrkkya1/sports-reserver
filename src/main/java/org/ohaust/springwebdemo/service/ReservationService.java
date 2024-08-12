@@ -14,8 +14,8 @@ import java.util.List;
 @Service
 public class ReservationService {
 
-    private static final int intervalLength = 15;
-    private final int intervalsPerHour = 60 / intervalLength;
+    private static final int INTERVAL_LENGTH = 15;
+    private static final int INTERVALS_PER_HOUR = 60 / INTERVAL_LENGTH;
     private final ReservationRepository repository;
 
 
@@ -70,7 +70,7 @@ public class ReservationService {
         int minuteFrom = timeFrom.getMinute();
         int hourTo = timeTo.getHour();
         int minuteTo = timeTo.getMinute();
-        return (hourTo - hourFrom) * intervalsPerHour + (minuteTo - minuteFrom) / intervalLength;
+        return (hourTo - hourFrom) * INTERVALS_PER_HOUR + (minuteTo - minuteFrom) / INTERVAL_LENGTH;
     }
 
 
