@@ -5,9 +5,11 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ReservableHour {
+public class DateModel {
 
-    private int hour;
-    private boolean isReserved = false;
+    private int year;
+    private int month;
+    private int day;
+
 
 }
