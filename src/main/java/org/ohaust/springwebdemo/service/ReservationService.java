@@ -16,33 +16,33 @@ public class ReservationService {
     private final ReservationRepository repository;
 
 
-    public ReservationService(ReservationRepository repository) {
+    public ReservationService(final ReservationRepository repository) {
         this.repository = repository;
     }
 
-    public ReservationResult reserveIfAvailable(ReservationRequest reservationRequest) {
+    public ReservationResult reserveIfAvailable(final ReservationRequest reservationRequest) {
         Date date = reservationRequest.getDate();
 
         ReservableDate dateToReserve = repository.findByDate(date);
         if (dateToReserve == null) {
-            return new ReservationResult(false,"Date does not exists or not available.");
+            return new ReservationResult(false, "Date does not exists or not available.");
         }
         int hour = reservationRequest.getHour();
         List<ReservableHour> reservableHourList = dateToReserve.getReservableHourList();
         int index = findIndexOfHour(reservableHourList, hour);
         if (index == -1) {
-            return new ReservationResult(false,"Hour is not available for reservation.");
+            return new ReservationResult(false, "Hour is not available for reservation.");
         }
         ReservableHour reservableHour = reservableHourList.get(index);
         if (reserve(reservableHour)) {
             repository.save(dateToReserve);
-            return new ReservationResult(true,"Successfully reserved hour.");
+            return new ReservationResult(true, "Successfully reserved hour.");
 
         }
-        return new ReservationResult(false,"Hour already reserved!");
+        return new ReservationResult(false, "Hour already reserved!");
     }
 
-    public boolean reserve(ReservableHour reservableHour) {
+    public boolean reserve(final ReservableHour reservableHour) {
         if (reservableHour.isReserved()) {
             return false;
         }
@@ -51,7 +51,7 @@ public class ReservationService {
     }
 
 
-    private int findIndexOfHour(List<ReservableHour> reservableHourList, int hour) {
+    private int findIndexOfHour(final List<ReservableHour> reservableHourList, final int hour) {
         for (int i = 0; i < reservableHourList.size(); i++) {
             int hourOfDay = reservableHourList.get(i).getHour();
             if (hour == hourOfDay) {

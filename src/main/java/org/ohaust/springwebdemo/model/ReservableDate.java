@@ -13,9 +13,9 @@ import java.util.List;
 public class ReservableDate {
 
     @Id
-    String id;
+    private String id;
 
-    Date date;
-    List<ReservableHour> reservableHourList;
+    private Date date;
+    private List<ReservableHour> reservableHourList;
 
 }

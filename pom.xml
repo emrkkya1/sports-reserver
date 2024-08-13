@@ -80,6 +80,7 @@
                             <suppressionsLocation>src/main/resources/checkstyle-suppressions.xml</suppressionsLocation>
                             <consoleOutput>true</consoleOutput>
                             <failsOnError>true</failsOnError>
+                            <propertyExpansion>checkstyle.config.path=${basedir}/src/main/resources</propertyExpansion>
                         </configuration>
                     </execution>
                 </executions>

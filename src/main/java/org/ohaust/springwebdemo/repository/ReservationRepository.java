@@ -7,6 +7,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ReservationRepository extends MongoRepository<ReservableDate,String> {
+public interface ReservationRepository extends MongoRepository<ReservableDate, String> {
     ReservableDate findByDate(Date date);
 }

@@ -18,7 +18,7 @@ public class ReservationController {
 
 
     @PostMapping("/reserve")
-    public ResponseEntity<String> reserve(@RequestBody ReservationRequest reservationRequest) {
+    public ResponseEntity<String> reserve(@RequestBody final ReservationRequest reservationRequest) {
         ReservationResult reservationResult = reservationService.reserveIfAvailable(reservationRequest);
         if (reservationResult.isSuccess()) {
             return ResponseEntity.ok(reservationResult.getMessage());
