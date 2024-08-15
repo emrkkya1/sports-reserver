@@ -27,9 +27,9 @@ public class AvailabilityService {
         ReservableDateModel dateInDatabase = reservationRepository.findByDateModel(availabilityRequest.getDateModel());
         if (dateInDatabase == null && dateFromRequest != null) {
             reservationRepository.save(dateFromRequest);
-            return new DayCreationResult(true,"Available day was created and saved to the database successfully.");
+            return new DayCreationResult(true, "Available day was created and saved to the database successfully.");
         } else {
-            return new DayCreationResult(false,"Date already exists or day-hour values wasn't accepted.");
+            return new DayCreationResult(false, "Date already exists or day-hour values wasn't accepted.");
         }
 
 
@@ -43,7 +43,7 @@ public class AvailabilityService {
         if (numberOfTimeIntervals < 0) {
             return null;
         }
-        populateReservableTimeIntervalList(timeFrom,numberOfTimeIntervals,reservableTimeIntervalModelList);
+        populateReservableTimeIntervalList(timeFrom, numberOfTimeIntervals, reservableTimeIntervalModelList);
         return new ReservableDateModel(availabilityRequest.getDateModel(), reservableTimeIntervalModelList);
     }
 
@@ -51,7 +51,7 @@ public class AvailabilityService {
         return (timeTo.getHour() - timeFrom.getHour()) * INTERVALS_PER_HOUR + (timeTo.getMinute() - timeFrom.getMinute()) / INTERVAL_LENGTH;
     }
 
-    private void populateReservableTimeIntervalList(TimePointModel timeFrom, int numberOfTimeIntervals,List<ReservableTimeIntervalModel> reservableTimeIntervalModelList) {
+    private void populateReservableTimeIntervalList(TimePointModel timeFrom, int numberOfTimeIntervals, List<ReservableTimeIntervalModel> reservableTimeIntervalModelList) {
         for (int i = 0; i < numberOfTimeIntervals; i++) {
             int hour = timeFrom.getHour() + i / INTERVALS_PER_HOUR;
             int minute = (timeFrom.getMinute() + i * INTERVAL_LENGTH) % 60;
