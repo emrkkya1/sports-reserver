@@ -38,13 +38,13 @@ public class AvailabilityService {
     private ReservableDateModel transformAvailabilityRequestToReservableDate(AvailabilityRequest availabilityRequest) {
         TimePointModel timeFrom = availabilityRequest.getTimeFrom();
         TimePointModel timeTo = availabilityRequest.getTimeTo();
-        List<ReservableTimeIntervalModel> reservableTimeIntervalModelList = new ArrayList<>();
+        List<ReservableTimeIntervalModel> reservableTimeSlots = new ArrayList<>();
         int numberOfTimeIntervals = numberOfTimeIntervals(timeFrom, timeTo);
         if (numberOfTimeIntervals < 0) {
             return null;
         }
-        populateReservableTimeIntervalList(timeFrom, numberOfTimeIntervals, reservableTimeIntervalModelList);
-        return new ReservableDateModel(availabilityRequest.getDateModel(), reservableTimeIntervalModelList);
+        populateReservableTimeIntervalList(timeFrom, numberOfTimeIntervals, reservableTimeSlots);
+        return new ReservableDateModel(availabilityRequest.getDateModel(), reservableTimeSlots);
     }
 
     private int numberOfTimeIntervals(TimePointModel timeFrom, TimePointModel timeTo) {
