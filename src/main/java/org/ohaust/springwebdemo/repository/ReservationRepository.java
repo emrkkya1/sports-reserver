@@ -2,7 +2,7 @@ package org.ohaust.springwebdemo.repository;
 
 
 import com.mongodb.lang.NonNull;
-import com.mongodb.lang.NonNullApi;
+
 import org.ohaust.springwebdemo.model.DateModel;
 import org.ohaust.springwebdemo.model.ReservableDateModel;
 import org.springframework.data.mongodb.repository.MongoRepository;
