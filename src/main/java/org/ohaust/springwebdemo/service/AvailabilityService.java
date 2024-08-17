@@ -11,7 +11,6 @@ import org.ohaust.springwebdemo.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -43,34 +42,31 @@ public class AvailabilityService {
             return new AvailabilityResult(false, "Invalid date ID.");
         }
         Optional<ReservableDateModel> reservableDateContainer = reservationRepository.findById(availableDateRequest.getId());
-        if(reservableDateContainer.isEmpty()) {
-           return new AvailabilityResult(false,"There is no such date.");
+        if (reservableDateContainer.isEmpty()) {
+            return new AvailabilityResult(false, "There is no such date.");
 
-        }
-        else {
+        } else {
 
             ReservableDateModel reservableDate = reservableDateContainer.get();
             List<ReservableTimeIntervalModel> reservableTimeSlots = new ArrayList<>();
-            boolean isPopulated = populateReservableTimeIntervalList(availableDateRequest.getTimeFrom(), availableDateRequest.getTimeTo() ,reservableTimeSlots);
+            boolean isPopulated = populateReservableTimeIntervalList(availableDateRequest.getTimeFrom(), availableDateRequest.getTimeTo(), reservableTimeSlots);
             if (!isPopulated) {
-                return new AvailabilityResult(false,"Improper hour input.");
+                return new AvailabilityResult(false, "Improper hour input.");
             }
             reservableDate.setReservableQuarterHourList(reservableTimeSlots);
             reservationRepository.save(reservableDate);
 
-            return new AvailabilityResult(true,"Successfully updated availability.");
+            return new AvailabilityResult(true, "Successfully updated availability.");
         }
 
 
     }
 
 
-
-
     public AvailabilityResult createAnAvailableDay(AvailableDateRequest availableDateRequest) {
 
         if (availableDateRequest.getDateModel() == null || availableDateRequest.getTimeFrom() == null || availableDateRequest.getTimeTo() == null) {
-            return new AvailabilityResult(false,"Invalid input");
+            return new AvailabilityResult(false, "Invalid input");
         }
 
         ReservableDateModel dateFromRequest = transformAvailabilityRequestToReservableDate(availableDateRequest);
@@ -103,9 +99,9 @@ public class AvailabilityService {
         return (timeTo.getHour() - timeFrom.getHour()) * INTERVALS_PER_HOUR + (timeTo.getMinute() - timeFrom.getMinute()) / INTERVAL_LENGTH;
     }
 
-    private boolean populateReservableTimeIntervalList(TimePointModel timeFrom,TimePointModel timeTo, List<ReservableTimeIntervalModel> reservableTimeSlots) {
+    private boolean populateReservableTimeIntervalList(TimePointModel timeFrom, TimePointModel timeTo, List<ReservableTimeIntervalModel> reservableTimeSlots) {
         int numberOfTimeIntervals = numberOfTimeIntervals(timeFrom, timeTo);
-        if (numberOfTimeIntervals<0) {
+        if (numberOfTimeIntervals < 0) {
             return false;
         }
         for (int i = 0; i < numberOfTimeIntervals; i++) {

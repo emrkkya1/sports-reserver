@@ -32,7 +32,7 @@ public class AvailableDateController {
 
     @PostMapping("/update")
     public ResponseEntity<String> updateAvailableDay(@RequestBody AvailableDateRequest availableDateUpdateRequest) {
-        AvailabilityResult availabilityUpdateResult= availabilityService.updateAvailableDay(availableDateUpdateRequest);
+        AvailabilityResult availabilityUpdateResult = availabilityService.updateAvailableDay(availableDateUpdateRequest);
         if (availabilityUpdateResult.isSuccess()) {
             return ResponseEntity.ok(availabilityUpdateResult.getMessage());
         }

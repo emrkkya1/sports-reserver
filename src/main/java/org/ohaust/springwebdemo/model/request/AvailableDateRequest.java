@@ -6,11 +6,12 @@ import org.ohaust.springwebdemo.model.DateModel;
 import org.ohaust.springwebdemo.model.TimePointModel;
 
 @Data
-@NoArgsConstructor public class AvailableDateRequest {
+@NoArgsConstructor
+public class AvailableDateRequest {
 
     private String id;
-    DateModel dateModel;
-    TimePointModel timeFrom;
-    TimePointModel timeTo;
+    private DateModel dateModel;
+    private TimePointModel timeFrom;
+    private TimePointModel timeTo;
 
 }
