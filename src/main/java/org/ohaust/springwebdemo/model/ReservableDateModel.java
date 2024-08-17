@@ -1,5 +1,6 @@
 package org.ohaust.springwebdemo.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -14,6 +15,6 @@ public class ReservableDateModel {
     String id;
 
     private final DateModel dateModel;
-    private final List<ReservableTimeIntervalModel> reservableQuarterHourList;
+    private List<ReservableTimeIntervalModel> reservableQuarterHourList;
 
 }
