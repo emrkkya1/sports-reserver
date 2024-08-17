@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-public class DayCreationResult {
+public class AvailabilityResult {
     private final boolean success;
     private final String message;
 }

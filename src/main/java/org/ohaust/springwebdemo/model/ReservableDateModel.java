@@ -11,9 +11,9 @@ import java.util.List;
 public class ReservableDateModel {
 
     @Id
-    String id;
+    private String id;
 
     private final DateModel dateModel;
-    private final List<ReservableTimeIntervalModel> reservableQuarterHourList;
+    private List<ReservableTimeIntervalModel> reservableQuarterHourList;
 
 }

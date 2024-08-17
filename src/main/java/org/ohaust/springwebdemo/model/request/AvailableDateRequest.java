@@ -7,10 +7,11 @@ import org.ohaust.springwebdemo.model.TimePointModel;
 
 @Data
 @NoArgsConstructor
-public class AvailabilityRequest {
+public class AvailableDateRequest {
 
-    DateModel dateModel;
-    TimePointModel timeFrom;
-    TimePointModel timeTo;
+    private String id;
+    private DateModel dateModel;
+    private TimePointModel timeFrom;
+    private TimePointModel timeTo;
 
 }
