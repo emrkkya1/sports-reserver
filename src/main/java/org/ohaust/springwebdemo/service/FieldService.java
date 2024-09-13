@@ -1,7 +1,6 @@
 package org.ohaust.springwebdemo.service;
 
 import lombok.RequiredArgsConstructor;
-import org.ohaust.springwebdemo.model.AvailableDate;
 import org.ohaust.springwebdemo.model.FieldModel;
 import org.ohaust.springwebdemo.repository.FieldRepository;
 import org.springframework.stereotype.Service;

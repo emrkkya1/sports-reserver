@@ -1,9 +1,5 @@
 package org.ohaust.springwebdemo.service;
 
-import org.ohaust.springwebdemo.model.DateModel;
-import org.ohaust.springwebdemo.model.ReservableDateModel;
-import org.ohaust.springwebdemo.model.ReservableTimeIntervalModel;
-import org.ohaust.springwebdemo.model.TimePointModel;
 import org.ohaust.springwebdemo.model.request.ReservationRequest;
 import org.ohaust.springwebdemo.model.result.ReservationResult;
 import org.ohaust.springwebdemo.repository.ReservationRepository;

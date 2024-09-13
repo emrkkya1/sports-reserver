@@ -1,7 +1,6 @@
 package org.ohaust.springwebdemo.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.ohaust.springwebdemo.model.AvailableDate;
 import org.ohaust.springwebdemo.model.FieldModel;
 import org.ohaust.springwebdemo.service.FieldService;
 import org.springframework.http.HttpStatus;
