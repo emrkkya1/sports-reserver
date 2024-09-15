@@ -14,10 +14,6 @@ public class DateModel {
     private DateInfo dateInfo;
     private List<TimeInterval> timeIntervals;
 
-    public DateModel(int year, int month, int day, TimeInterval... initialInterval) {
-        dateInfo = new DateInfo(year, month, day);
-        this.timeIntervals = List.of(initialInterval);
-    }
 
     public DateModel(DateInfo dateInfo, List<TimeInterval> timeIntervals) {
         this.dateInfo = dateInfo;

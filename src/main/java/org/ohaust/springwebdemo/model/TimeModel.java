@@ -21,13 +21,5 @@ public class TimeModel {
         this.minute = minute;
     }
 
-    public void setMinute(int minute) {
-        if (minute % minuteStep != 0 || minute < 0 || minute > (60 - minuteStep)) {
-            throw new IllegalArgumentException("Minute must be a multiple of " + minuteStep);
-        }
-        else if (hour < 0 || hour > 23) {
-            throw new IllegalArgumentException("Hour must be between 0 and 23");
-        }
-        this.minute = minute;
-    }
+
 }

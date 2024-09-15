@@ -70,9 +70,7 @@ public class ReservationService {
         int reservationEndMinute = reservationEnd.getMinute();
 
         if (reservationStartHour > intervalStartHour || (reservationStartHour == intervalStartHour && reservationStartMinute >= intervalStartMinute)) {
-            if (reservationEndHour < intervalEndHour || (reservationEndHour == intervalEndHour && reservationEndMinute <= intervalEndMinute)) {
-                return true;
-            }
+            return reservationEndHour < intervalEndHour || (reservationEndHour == intervalEndHour && reservationEndMinute <= intervalEndMinute);
         }
         return false;
     }
