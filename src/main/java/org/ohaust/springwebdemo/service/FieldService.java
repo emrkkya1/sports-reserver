@@ -26,7 +26,7 @@ public class FieldService {
         return fieldRepository.save(field);
     }
 
-    public FieldModel updateAvailableDatesAndHours(String fieldId, List<AvailableDate> availableDates) {
+    /*public FieldModel updateAvailableDatesAndHours(String fieldId, List<AvailableDate> availableDates) {
         Optional<FieldModel> fieldOptional = fieldRepository.findById(fieldId);
         if (fieldOptional.isPresent()) {
             FieldModel field = fieldOptional.get();
@@ -35,7 +35,7 @@ public class FieldService {
         } else {
             throw new IllegalArgumentException("Field with ID '" + fieldId + "' not found.");
         }
-    }
+    }*/
 
     public List<FieldModel> searchFieldsByPartialName(String fieldName) {
         return fieldRepository.findByFieldNameContaining(fieldName);

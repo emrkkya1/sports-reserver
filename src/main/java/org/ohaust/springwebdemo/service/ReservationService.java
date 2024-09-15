@@ -1,5 +1,9 @@
 package org.ohaust.springwebdemo.service;
 
+import org.ohaust.springwebdemo.model.DateInfo;
+import org.ohaust.springwebdemo.model.DateModel;
+import org.ohaust.springwebdemo.model.TimeInterval;
+import org.ohaust.springwebdemo.model.TimeModel;
 import org.ohaust.springwebdemo.model.request.ReservationRequest;
 import org.ohaust.springwebdemo.model.result.ReservationResult;
 import org.ohaust.springwebdemo.repository.ReservationRepository;
@@ -10,8 +14,7 @@ import java.util.List;
 @Service
 public class ReservationService {
 
-    private static final int INTERVAL_LENGTH = 15;
-    private static final int INTERVALS_PER_HOUR = 60 / INTERVAL_LENGTH;
+
     private final ReservationRepository repository;
 
 
@@ -20,73 +23,90 @@ public class ReservationService {
     }
 
     public ReservationResult reserveIfAvailable(ReservationRequest reservationRequest) {
-        DateModel dateModel = reservationRequest.getDateModel();
-
-        ReservableDateModel dateToReserve = repository.findByDateModel(dateModel);
-        if (dateToReserve == null) {
-            return new ReservationResult(false, "Date does not exists or not available.");
+        DateModel dateInDatabase = repository.findByDateInfo(reservationRequest.getDateInfo());
+        if (dateInDatabase == null) {
+            return new ReservationResult(false, "Date does not exist or not available.");
         }
-        TimePointModel timeFrom = reservationRequest.getTimeFrom();
-        TimePointModel timeTo = reservationRequest.getTimeTo();
-        int numberOfIntervals = calculateNumberOfIntervals(timeFrom, timeTo);
-        List<ReservableTimeIntervalModel> reservableTimeIntervalModelList = dateToReserve.getReservableQuarterHourList();
-        int index = findTimeIntervalIndex(reservableTimeIntervalModelList, timeFrom, numberOfIntervals);
+        int index = availableTimeIntervalIndex(reservationRequest);
         if (index == -1) {
             return new ReservationResult(false, "Time interval is not available for reservation.");
         }
 
-        if (reserve(reservableTimeIntervalModelList, index, numberOfIntervals)) {
-            repository.save(dateToReserve);
-            return new ReservationResult(true, "Successfully reserved the time interval.");
+        reserve(reservationRequest, index, dateInDatabase.getTimeIntervals());
+        repository.save(dateInDatabase);
+        return new ReservationResult(true, "Successfully reserved the time interval.");
 
-        }
-        return new ReservationResult(false, "Time interval or part of time interval already reserved!");
-    }
 
-    private boolean reserve(List<ReservableTimeIntervalModel> reservableTimeIntervalModelList, int index, int amountOfTime) {
-
-        ReservableTimeIntervalModel firstTimeInterval = reservableTimeIntervalModelList.get(index);
-        ReservableTimeIntervalModel lastTimeInterval = reservableTimeIntervalModelList.get(index + amountOfTime - 1);
-
-        //may be subject to change, there may be edge cases where a quarter hour within range is reserved
-        // but not first or last.
-        if (firstTimeInterval.isReserved() || lastTimeInterval.isReserved()) {
-            return false;
-        }
-
-        for (int i = index; i < index + amountOfTime; i++) {
-            ReservableTimeIntervalModel reservableTimeIntervalModel = reservableTimeIntervalModelList.get(i);
-            reservableTimeIntervalModel.setReserved(true);
-        }
-        return true;
-    }
-
-    private int calculateNumberOfIntervals(TimePointModel timeFrom, TimePointModel timeTo) {
-        int hourFrom = timeFrom.getHour();
-        int minuteFrom = timeFrom.getMinute();
-        int hourTo = timeTo.getHour();
-        int minuteTo = timeTo.getMinute();
-        return (hourTo - hourFrom) * INTERVALS_PER_HOUR + (minuteTo - minuteFrom) / INTERVAL_LENGTH;
     }
 
 
-    private int findTimeIntervalIndex(List<ReservableTimeIntervalModel> reservableTimeIntervalModelList, TimePointModel timeFrom, int numberOfTimeIntervals) {
-        int index = -1;
-        for (int i = 0; i < reservableTimeIntervalModelList.size(); i++) {
-            int hourFrom = reservableTimeIntervalModelList.get(i).getStartTime().getHour();
-            if (hourFrom == timeFrom.getHour()) {
-                int minuteFrom = reservableTimeIntervalModelList.get(i).getStartTime().getMinute();
-                if (minuteFrom == timeFrom.getMinute()) {
-                    index = i;
-                    break;
-                }
+    private int availableTimeIntervalIndex(ReservationRequest reservationRequest) {
+        DateInfo requestedDateInfo = reservationRequest.getDateInfo();
+        TimeModel reservationStart = reservationRequest.getReservationStart();
+        TimeModel reservationEnd = reservationRequest.getReservationEnd();
+
+
+        List<TimeInterval> timeIntervals = repository.findByDateInfo(requestedDateInfo).getTimeIntervals();
+        for (int i = 0; i < timeIntervals.size(); i++) {
+            if (isReservationInInterval(timeIntervals.get(i), reservationStart, reservationEnd)) {
+                return i;
             }
         }
-        if (index == -1 || index + numberOfTimeIntervals > reservableTimeIntervalModelList.size()) {
-            return -1;
-        }
-        return index;
+        return -1;
+
     }
+
+    private boolean isReservationInInterval(TimeInterval interval , TimeModel reservationStart, TimeModel reservationEnd) {
+        TimeModel intervalStart = interval.getStart();
+        TimeModel intervalEnd = interval.getEnd();
+        int intervalStartHour = intervalStart.getHour();
+        int intervalStartMinute = intervalStart.getMinute();
+        int intervalEndHour = intervalEnd.getHour();
+        int intervalEndMinute = intervalEnd.getMinute();
+
+        int reservationStartHour = reservationStart.getHour();
+        int reservationStartMinute = reservationStart.getMinute();
+        int reservationEndHour = reservationEnd.getHour();
+        int reservationEndMinute = reservationEnd.getMinute();
+
+        if (reservationStartHour > intervalStartHour || (reservationStartHour == intervalStartHour && reservationStartMinute >= intervalStartMinute)) {
+            if (reservationEndHour < intervalEndHour || (reservationEndHour == intervalEndHour && reservationEndMinute <= intervalEndMinute)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void reserve(ReservationRequest reservationRequest, int index, List<TimeInterval> timeIntervals) {
+        TimeModel reservationStart = reservationRequest.getReservationStart();
+        TimeModel reservationEnd = reservationRequest.getReservationEnd();
+        TimeInterval interval = timeIntervals.get(index);
+        if (reservationStart.equals(interval.getStart())) {
+            TimeInterval remainingInterval = new TimeInterval(reservationEnd, interval.getEnd());
+            timeIntervals.remove(index);
+            if (remainingInterval.getDurationInMinutes() > 0) {
+                timeIntervals.add(index, remainingInterval);
+            }
+
+        }
+        else if (reservationEnd.equals(interval.getEnd())) {
+            TimeInterval remainingInterval = new TimeInterval(interval.getStart(), interval.getStart());
+            timeIntervals.remove(index);
+            if (remainingInterval.getDurationInMinutes() > 0) {
+                timeIntervals.add(index, remainingInterval);
+            }
+        }
+        else {
+            TimeInterval firstRemainingInterval = new TimeInterval(interval.getStart(), reservationStart);
+            TimeInterval secondRemainingInterval = new TimeInterval(reservationEnd, interval.getEnd());
+            timeIntervals.remove(index);
+            timeIntervals.add(index, firstRemainingInterval);
+            timeIntervals.add(index + 1, secondRemainingInterval);
+        }
+
+    }
+
+
 
 
 }

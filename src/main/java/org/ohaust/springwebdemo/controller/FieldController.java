@@ -38,7 +38,7 @@ public class FieldController {
         return ResponseEntity.ok(fieldService.getFieldsByOwnerId(ownerId));
     }
 
-    @PutMapping("/{fieldId}/available-dates")
+    /* @PutMapping("/{fieldId}/available-dates")
     public ResponseEntity<FieldModel> updateAvailableDatesAndHours(@PathVariable("fieldId") String fieldId,
                                                               @RequestBody List<AvailableDate> availableDates) {
         try {
@@ -47,7 +47,7 @@ public class FieldController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }
-    }
+    }*/
 
     @GetMapping("/search/contains")
     public ResponseEntity<List<FieldModel>> searchFieldsByPartialName(@RequestParam String partialName) {

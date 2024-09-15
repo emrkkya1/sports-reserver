@@ -21,7 +21,7 @@ public class FieldModel {
     private String city;
     @Indexed
     private String province;
-    @Indexed
-    private List<AvailableDate> availableDates;
+    /*@Indexed
+    private List<AvailableDate> availableDates;*/
 
 }
